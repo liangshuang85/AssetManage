@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shiyan2.mapper.RecordMapper">
+
+    <select id="pageCC" resultType="com.shiyan2.entity.RecordExt">
+
+#         SELECT a.*,
+#                (SELECT u.name FROM user u WHERE u.id=a.userId)username,
+#                (SELECT u.name FROM user u WHERE u.id=a.admin_id)adminname,
+#                (SELECT ase.name FROM asset ase WHERE ase.id=a.asset)assetname,
+#                (SELECT ast.name FROM asset ase,assettype ast WHERE ase.id=a.asset AND ase.assetType=ast.id)assettypename
+#         FROM record a
+    select a.*,b.name assetname,d.name assettypename,
+        (select u.name from user u where u.id=a.userid)username,
+        (select u.name from user u where u.id=a.admin_id)adminname
+    from record a ,asset b,assettype d
+#     where a.asset=b.id and b.assetType=d.id
+    ${ew.customSqlSegment}
+    </select>
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.shiyan2.entity.Record">
+        <id column="id" property="id" />
+        <result column="goods" property="goods" />
+        <result column="userId" property="userid" />
+        <result column="admin_id" property="adminId" />
+        <result column="count" property="count" />
+        <result column="createtime" property="createtime" />
+        <result column="remark" property="remark" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, asset, userId, admin_id, count, createtime, remark
+    </sql>
+
+</mapper>
